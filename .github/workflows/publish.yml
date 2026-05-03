@@ -1,0 +1,116 @@
+name: publish
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Monday 06:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'matrix.yaml'
+      - 'shared/**'
+      - 'node/**'
+      - 'python/**'
+      - 'bun/**'
+      - 'go/**'
+      - 'java/**'
+      - 'dotnet/**'
+      - 'ruby/**'
+      - 'php/**'
+      - 'combos/**'
+      - '.github/workflows/publish.yml'
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      images: ${{ steps.read.outputs.images }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: |
+          set -euo pipefail
+          echo "images=$(yq -o=json '.images' matrix.yaml | jq -c)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJson(needs.matrix.outputs.images) }}
+    env:
+      GHCR_OWNER: rehearse-sh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@v3
+      - uses: sigstore/cosign-installer@v3
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Slug image id
+        id: slug
+        run: |
+          slug=$(echo '${{ matrix.image.id }}' | tr ':' '-')
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+
+      - name: Build (multi-arch)
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag ghcr.io/$GHCR_OWNER/${{ steps.slug.outputs.slug }}:latest \
+            --tag ghcr.io/$GHCR_OWNER/${{ steps.slug.outputs.slug }}:$(date -u +%Y%m%d) \
+            --output type=registry \
+            --file ${{ matrix.image.dir }}/Dockerfile \
+            .
+
+      - name: Smoke (amd64)
+        run: docker run --rm --platform linux/amd64 ghcr.io/$GHCR_OWNER/${{ steps.slug.outputs.slug }}:latest sh /smoke.sh
+
+      - name: Smoke (arm64)
+        run: docker run --rm --platform linux/arm64 ghcr.io/$GHCR_OWNER/${{ steps.slug.outputs.slug }}:latest sh /smoke.sh
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ghcr.io/${{ env.GHCR_OWNER }}/${{ steps.slug.outputs.slug }}:latest
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Cosign sign (keyless OIDC)
+        run: cosign sign --yes ghcr.io/$GHCR_OWNER/${{ steps.slug.outputs.slug }}:latest
+
+      - name: Update Pro catalog
+        if: ${{ secrets.CATALOG_ADMIN_TOKEN != '' }}
+        run: |
+          curl -fSs -X POST https://api.rehearse.sh/v1/internal/catalog \
+            -H "Authorization: Bearer ${{ secrets.CATALOG_ADMIN_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+                --arg id '${{ matrix.image.id }}' \
+                --arg lang '$(echo '${{ matrix.image.id }}' | cut -d':' -f1 | sed 's/-.*//')' \
+                --arg version '$(echo '${{ matrix.image.id }}' | cut -d':' -f2 | sed 's/-.*//')' \
+                --arg variant 'warm' \
+                --arg display '${{ matrix.image.id }}' \
+                --arg desc '${{ matrix.image.id }} — auto-published' \
+                --argjson now $(date +%s)000 \
+                '{id:$id,language:$lang,version:$version,variant:$variant,display_name:$display,description:$desc,last_built_at:$now}')"
+
+  notify-failure:
+    needs: build
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK }}" ]; then
+            curl -fSs -X POST "${{ secrets.SLACK_WEBHOOK }}" \
+              -H 'Content-Type: application/json' \
+              -d '{"text":"Image build failed: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+          fi

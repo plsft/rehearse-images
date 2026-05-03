@@ -1,0 +1,31 @@
+images:
+  - id: node:20-warm
+    dir: node/20
+    arches: [amd64, arm64]
+  - id: node:20-postgres-warm
+    dir: combos/node-20-postgres
+    arches: [amd64, arm64]
+  - id: python:3.12-warm
+    dir: python/3.12
+    arches: [amd64, arm64]
+  - id: python:3.12-postgres-warm
+    dir: combos/python-3.12-postgres
+    arches: [amd64, arm64]
+  - id: bun:1-warm
+    dir: bun/1
+    arches: [amd64, arm64]
+  - id: go:1.23-warm
+    dir: go/1.23
+    arches: [amd64, arm64]
+  - id: java:21-warm
+    dir: java/21
+    arches: [amd64, arm64]
+  - id: dotnet:8-warm
+    dir: dotnet/8
+    arches: [amd64, arm64]
+  - id: ruby:3.3-warm
+    dir: ruby/3.3
+    arches: [amd64, arm64]
+  - id: php:8.3-warm
+    dir: php/8.3
+    arches: [amd64, arm64]
