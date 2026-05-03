@@ -1,4 +1,4 @@
-FROM golang:1.23
+FROM golang:1.24
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
@@ -7,12 +7,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
     GOPROXY=https://proxy.golang.org,direct \
     GOFLAGS=-buildvcs=false
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Patch the OS layer; Go stdlib is current via the 1.24 image.
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       git curl ca-certificates jq make \
     && rm -rf /var/lib/apt/lists/*
 
-# Warm module cache with a few common modules. Realistic warming for Go is
-# project-specific; we seed proxy state for popular libraries.
+# Warm module cache with curated popular modules.
 RUN mkdir -p /tmp/warm-go && cd /tmp/warm-go && go mod init warm && \
     go get \
       github.com/stretchr/testify@latest \
@@ -29,7 +29,6 @@ RUN mkdir -p /tmp/warm-go && cd /tmp/warm-go && go mod init warm && \
 COPY shared/runner-user.sh /tmp/runner-user.sh
 RUN chmod +x /tmp/runner-user.sh && /tmp/runner-user.sh && rm /tmp/runner-user.sh
 
-# Reseed module cache into the runner user's GOPATH.
 ENV GOPATH=/home/runner/go \
     GOCACHE=/home/runner/.cache/go-build
 RUN mkdir -p $GOPATH $GOCACHE && chown -R runner:runner /home/runner
@@ -37,7 +36,7 @@ RUN mkdir -p $GOPATH $GOCACHE && chown -R runner:runner /home/runner
 WORKDIR /workspace
 USER runner
 
-COPY go/1.23/smoke.sh /smoke.sh
+COPY go/1.24/smoke.sh /smoke.sh
 LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
-      org.opencontainers.image.title="rehearse-pro/go:1.23-warm" \
-      org.opencontainers.image.description="Go 1.23 with warmed module proxy cache."
+      org.opencontainers.image.title="rehearse-pro/go:1.24-warm" \
+      org.opencontainers.image.description="Go 1.24 with warmed module proxy cache."

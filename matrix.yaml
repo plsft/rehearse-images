@@ -14,8 +14,8 @@ images:
   - id: bun:1-warm
     dir: bun/1
     arches: [amd64, arm64]
-  - id: go:1.23-warm
-    dir: go/1.23
+  - id: go:1.24-warm
+    dir: go/1.24
     arches: [amd64, arm64]
   - id: java:21-warm
     dir: java/21

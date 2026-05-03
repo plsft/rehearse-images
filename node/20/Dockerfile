@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     NPM_CONFIG_FUND=false
 
 # System packages most CI workflows expect.
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       git curl ca-certificates jq make g++ python3 \
     && rm -rf /var/lib/apt/lists/*
 

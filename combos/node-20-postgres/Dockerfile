@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     NPM_CONFIG_AUDIT=false \
     NPM_CONFIG_FUND=false
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       git curl ca-certificates jq make g++ python3 sudo \
       postgresql postgresql-contrib \
     && rm -rf /var/lib/apt/lists/*

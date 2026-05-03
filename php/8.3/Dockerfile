@@ -5,8 +5,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LC_ALL=C.UTF-8 \
     TZ=UTC
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       git curl ca-certificates jq make unzip libzip-dev libpq-dev libonig-dev \
+      default-libmysqlclient-dev libicu-dev \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip intl bcmath \
     && rm -rf /var/lib/apt/lists/*
 
