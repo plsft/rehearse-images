@@ -26,6 +26,6 @@ WORKDIR /workspace
 USER runner
 
 COPY php/8.3/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/php:8.3-warm" \
       org.opencontainers.image.description="PHP 8.3 + Composer with warmed cache."

@@ -37,6 +37,6 @@ WORKDIR /workspace
 USER runner
 
 COPY go/1.24/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/go:1.24-warm" \
       org.opencontainers.image.description="Go 1.24 with warmed module proxy cache."

@@ -27,6 +27,6 @@ WORKDIR /workspace
 USER runner
 
 COPY python/3.12/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/python:3.12-warm" \
       org.opencontainers.image.description="Python 3.12 + pip/poetry/uv warmed for CI."

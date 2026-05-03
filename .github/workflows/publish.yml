@@ -44,7 +44,7 @@ jobs:
       matrix:
         image: ${{ fromJson(needs.matrix.outputs.images) }}
     env:
-      GHCR_OWNER: rehearse-sh
+      GHCR_OWNER: plsft
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -130,7 +130,7 @@ jobs:
             --arg version "$version" \
             --arg variant 'warm' \
             --arg display "$IMAGE_ID" \
-            --arg desc "$IMAGE_ID auto-published from rehearse-sh/images" \
+            --arg desc "$IMAGE_ID auto-published from plsft/rehearse-images" \
             --argjson now "$now" \
             '{id:$id,language:$lang,version:$version,variant:$variant,display_name:$display,description:$desc,last_built_at:$now}')
           curl -fSs -X POST https://api.rehearse.sh/v1/internal/catalog \

@@ -1,4 +1,4 @@
-# rehearse-sh/images
+# plsft/rehearse-images
 
 Source for the 10 Rehearse Pro CI base images. Built and signed via GitHub
 Actions on a weekly cron (Mondays 06:00 UTC) plus on every push that affects
@@ -7,7 +7,7 @@ an image directory.
 > **Move to its own repo before launch:** this folder is colocated under
 > `rehearse-pro/images/` for scaffolding speed. When you're ready, extract
 > via `git subtree split --prefix=images -b images-extract` and push that
-> branch to `github.com/rehearse-sh/images`.
+> branch to `github.com/plsft/rehearse-images`.
 
 ## Layout
 
@@ -56,7 +56,7 @@ Every image:
 6. Includes `/smoke.sh` exit-0-when-healthy.
 7. Trivy-scanned (HIGH/CRITICAL fixed → fail).
 8. Cosign-signed via Sigstore keyless OIDC.
-9. Pushed to `ghcr.io/rehearse-sh/<id>` (and mirrored to `registry.rehearse.sh`
+9. Pushed to `ghcr.io/plsft/<id>` (and mirrored to `registry.rehearse.sh`
    via the proxy).
 10. POST `/v1/internal/catalog` to update the live catalog row.
 

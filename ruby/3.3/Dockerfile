@@ -19,6 +19,6 @@ WORKDIR /workspace
 USER runner
 
 COPY ruby/3.3/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/ruby:3.3-warm" \
       org.opencontainers.image.description="Ruby 3.3 + Bundler with warmed gem cache."

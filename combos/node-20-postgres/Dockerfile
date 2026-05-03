@@ -52,6 +52,6 @@ COPY combos/node-20-postgres/smoke.sh /smoke.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
 
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/node:20-postgres-warm" \
       org.opencontainers.image.description="Node 20 + Postgres 16 + warmed npm caches."

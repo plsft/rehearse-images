@@ -34,6 +34,6 @@ ENV NPM_CONFIG_CACHE=/home/runner/.npm \
     YARN_CACHE_FOLDER=/home/runner/.cache/yarn
 
 COPY node/20/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/node:20-warm" \
       org.opencontainers.image.description="Node 20 + npm/pnpm/yarn warmed for CI."

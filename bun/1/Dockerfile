@@ -22,6 +22,6 @@ WORKDIR /workspace
 USER runner
 
 COPY bun/1/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/bun:1-warm" \
       org.opencontainers.image.description="Bun 1 with warmed npm-compatible cache."

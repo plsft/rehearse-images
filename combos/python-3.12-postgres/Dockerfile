@@ -35,6 +35,6 @@ COPY combos/python-3.12-postgres/smoke.sh /smoke.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
 
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/python:3.12-postgres-warm" \
       org.opencontainers.image.description="Python 3.12 + Postgres 16 + psycopg2."

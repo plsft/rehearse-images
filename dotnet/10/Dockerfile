@@ -24,6 +24,6 @@ WORKDIR /workspace
 USER runner
 
 COPY dotnet/10/smoke.sh /smoke.sh
-LABEL org.opencontainers.image.source="https://github.com/rehearse-sh/images" \
+LABEL org.opencontainers.image.source="https://github.com/plsft/rehearse-images" \
       org.opencontainers.image.title="rehearse-pro/dotnet:10-warm" \
       org.opencontainers.image.description=".NET 10 SDK (LTS) with warmed NuGet cache."
