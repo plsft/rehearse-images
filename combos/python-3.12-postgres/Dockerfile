@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      git curl ca-certificates jq make gcc g++ libpq-dev libffi-dev \
+      git curl ca-certificates jq make gcc g++ libpq-dev libffi-dev sudo \
       postgresql postgresql-contrib \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,12 +23,12 @@ RUN chmod +x /tmp/runner-user.sh && /tmp/runner-user.sh && rm /tmp/runner-user.s
 COPY combos/python-3.12-postgres/init-pg.sh /init-pg.sh
 RUN chmod +x /init-pg.sh && /init-pg.sh
 
-WORKDIR /workspace
-USER runner
+RUN echo 'runner ALL=(ALL) NOPASSWD: /usr/sbin/service postgresql *' >> /etc/sudoers
 
 COPY combos/python-3.12-postgres/entrypoint.sh /entrypoint.sh
-USER root
 RUN chmod +x /entrypoint.sh
+
+WORKDIR /workspace
 USER runner
 
 COPY combos/python-3.12-postgres/smoke.sh /smoke.sh
