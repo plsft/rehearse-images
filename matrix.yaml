@@ -20,8 +20,8 @@ images:
   - id: java:21-warm
     dir: java/21
     arches: [amd64, arm64]
-  - id: dotnet:8-warm
-    dir: dotnet/8
+  - id: dotnet:10-warm
+    dir: dotnet/10
     arches: [amd64, arm64]
   - id: ruby:3.3-warm
     dir: ruby/3.3
