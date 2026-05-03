@@ -94,6 +94,7 @@ jobs:
           severity: CRITICAL
           exit-code: '1'
           ignore-unfixed: true
+          scanners: vuln
       - name: Trivy advisory (HIGH; report only)
         if: always()
         uses: aquasecurity/trivy-action@master
@@ -103,6 +104,7 @@ jobs:
           severity: HIGH
           exit-code: '0'
           ignore-unfixed: true
+          scanners: vuln
 
       - name: Cosign sign (keyless OIDC)
         env:
