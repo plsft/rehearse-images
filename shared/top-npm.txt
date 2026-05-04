@@ -35,16 +35,9 @@ chai
 jest
 @jest/types
 ts-jest
-puppeteer
-playwright
-@playwright/test
-sharp
-better-sqlite3
 pg
 mysql2
 redis
 ioredis
 kysely
 drizzle-orm
-prisma
-@prisma/client
